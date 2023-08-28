@@ -14,23 +14,24 @@ mongoose.connect(uri)
 app.use(express.json())
 app.use(cors())
 
+// app.get("/",(req,resp)=>{
+//     resp.send("this working")
+// })
 
 app.get("/", async (req, resp) => {
     try {
-        let movie = await Movie.find();
-        if (!movie) {
-            resp.send(movie)
-            console.log(movie)
+        let movies = await Movie.find();
+        if (movies.length === 0) {
+            resp.send({ result: "no Movie data found" });
+        } else {
+            resp.send(movies);
+            console.log(movies);
         }
-        else {
-            resp.send({ result: "no Movie data found" })
-        }
+    } catch {
+        resp.status(400).json({ message: "error occurred while fetching movies" });
     }
+});
 
-    catch {
-        resp.status(400).json({ message: "no Movie found" })
-    }
-})
 
 app.post("/addmovie", async (req, resp) => {
     try {
@@ -105,4 +106,4 @@ app.delete("/movie/:id", async (req, resp) => {
 })
 
 
-app.listen(5000,()=>{console.log("app is running on port5000")})
+app.listen(5001,()=>{console.log("app is running on port5001")})
